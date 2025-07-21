@@ -52,6 +52,23 @@
             margin-right: 8px;
             vertical-align: middle;
         }
+        /* Estilo para o ícone do dia da semana */
+        .day-icon {
+            position: absolute;
+            top: 1rem; /* 16px */
+            right: 1rem; /* 16px */
+            background-color: #334155; /* Cor de fundo escura */
+            color: #ffffff; /* Cor do texto branca */
+            border-radius: 9999px; /* Totalmente arredondado */
+            width: 2.5rem; /* 40px */
+            height: 2.5rem; /* 40px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem; /* 12px */
+            font-weight: bold;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
     </style>
     
     
@@ -64,13 +81,13 @@
     <header class="bg-white shadow-md sticky top-0 z-10">
         <div class="container mx-auto px-6 py-4">
             <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">Análise de Desempenho de Chamadas</h1>
-            <p class="text-slate-600 mt-1">Período de Análise: 15/07/2025 a 18/07/2025 (Excluindo Neutras)</p>
+            <p class="text-slate-600 mt-1">Período de Análise: 15/07/2025 a 21/07/2025 (Excluindo Neutras)</p>
             <div class="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-4">
                 <span class="text-slate-700 text-sm md:text-base">POC para:</span>
-                <img src="https://placehold.co/80x30/8a05be/ffffff?text=Nubank" onerror="this.onerror=null;this.src='https://placehold.co/80x30/cccccc/000000?text=Nubank';" alt="Logo Nubank" class="h-8 rounded-md">
+                <img src="https://placehold.co/70x25/8a05be/ffffff?text=Nubank" onerror="this.onerror=null;this.src='https://placehold.co/70x25/cccccc/000000?text=Nubank';" alt="Logo Nubank" class="h-7 rounded-md">
                 <span class="text-slate-700 text-sm md:text-base">Realizado por:</span>
-                <img src="https://placehold.co/80x30/000000/ffffff?text=Mutant" onerror="this.onerror=null;this.src='https://placehold.co/80x30/cccccc/000000?text=Mutant';" alt="Logo Mutant" class="h-8 rounded-md">
-                <img src="https://placehold.co/80x30/000000/ffffff?text=Intervalor" onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=IV';" alt="Logo Intervalor" class="h-8 rounded-md">
+                <img src="https://placehold.co/70x25/000000/ffffff?text=Mutant" onerror="this.onerror=null;this.src='https://placehold.co/70x25/cccccc/000000?text=Mutant';" alt="Logo Mutant" class="h-7 rounded-md">
+                <img src="https://placehold.co/70x25/000000/ffffff?text=Intervalor" onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=IV';" alt="Logo Intervalor" class="h-7 rounded-md">
             </div>
         </div>
     </header>
@@ -80,23 +97,23 @@
         <section id="overview" class="mb-12">
             <h2 class="text-2xl font-bold mb-2 text-center">Visão Geral do Período</h2>
             <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
-                Uma visão consolidada do desempenho das 74 chamadas ativas (não neutras) recebidas nos quatro dias. Os dados mostram a distribuição geral da qualidade e destacam as principais métricas do período.
+                Uma visão consolidada do desempenho das 76 chamadas ativas (não neutras) recebidas nos cinco dias. Os dados mostram a distribuição geral da qualidade e destacam as principais métricas do período.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center mb-10">
                 <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #4A86D9;">
-                    <p class="text-4xl font-extrabold text-slate-900">74</p>
+                    <p class="text-4xl font-extrabold text-slate-900">76</p>
                     <p class="text-slate-600 font-medium">Total de Ligações Ativas</p>
                 </div>
                 <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #6ED3B3;">
-                    <p class="text-4xl font-extrabold text-slate-900">45 <span class="text-xl font-semibold text-slate-700">(60.8%)</span></p>
+                    <p class="text-4xl font-extrabold text-slate-900">47 <span class="text-xl font-semibold text-slate-700">(61.8%)</span></p>
                     <p class="text-slate-600 font-medium">Boas</p>
                 </div>
                 <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #F9A646;">
-                    <p class="text-4xl font-extrabold text-slate-900">11 <span class="text-xl font-semibold text-slate-700">(14.9%)</span></p>
+                    <p class="text-4xl font-extrabold text-slate-900">11 <span class="text-xl font-semibold text-slate-700">(14.5%)</span></p>
                     <p class="text-slate-600 font-medium">Médias</p>
                 </div>
                 <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #F46E6E;">
-                    <p class="text-4xl font-extrabold text-slate-900">18 <span class="text-xl font-semibold text-slate-700">(24.3%)</span></p>
+                    <p class="text-4xl font-extrabold text-slate-900">18 <span class="text-xl font-semibold text-slate-700">(23.7%)</span></p>
                     <p class="text-slate-600 font-medium">Ruins</p>
                 </div>
             </div>
@@ -136,10 +153,11 @@
             <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
                 Análise aprofundada do desempenho de cada dia, detalhando a qualidade das chamadas e a distribuição por idioma, excluindo as ligações neutras.
             </p>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8"> <!-- Alterado para 5 colunas -->
                 
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
-                    <h3 class="text-xl font-bold mb-1">15 de Julho de 2025</h3>
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col relative"> <!-- Adicionado 'relative' aqui -->
+                    <div class="day-icon">TER</div> <!-- Ícone do dia da semana -->
+                    <h3 class="text-xl font-bold mb-1">15 de Julho de 2025 (Terça-feira)</h3>
                     <!-- Novo KPI Box para o total diário -->
                     <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
                         <p class="text-2xl font-extrabold text-slate-900" id="totalDaily15">23</p>
@@ -150,8 +168,9 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
-                    <h3 class="text-xl font-bold mb-1">16 de Julho de 2025</h3>
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col relative"> <!-- Adicionado 'relative' aqui -->
+                    <div class="day-icon">QUA</div> <!-- Ícone do dia da semana -->
+                    <h3 class="text-xl font-bold mb-1">16 de Julho de 2025 (Quarta-feira)</h3>
                     <!-- Novo KPI Box para o total diário -->
                     <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
                         <p class="text-2xl font-extrabold text-slate-900" id="totalDaily16">27</p>
@@ -162,8 +181,9 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
-                    <h3 class="text-xl font-bold mb-1">17 de Julho de 2025</h3>
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col relative"> <!-- Adicionado 'relative' aqui -->
+                    <div class="day-icon">QUI</div> <!-- Ícone do dia da semana -->
+                    <h3 class="text-xl font-bold mb-1">17 de Julho de 2025 (Quinta-feira)</h3>
                     <!-- Novo KPI Box para o total diário -->
                     <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
                         <p class="text-2xl font-extrabold text-slate-900" id="totalDaily17">17</p>
@@ -174,8 +194,9 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
-                    <h3 class="text-xl font-bold mb-1">18 de Julho de 2025</h3>
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col relative"> <!-- Adicionado 'relative' aqui -->
+                    <div class="day-icon">SEX</div> <!-- Ícone do dia da semana -->
+                    <h3 class="text-xl font-bold mb-1">18 de Julho de 2025 (Sexta-feira)</h3>
                     <!-- Novo KPI Box para o total diário -->
                     <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
                         <p class="text-2xl font-extrabold text-slate-900" id="totalDaily18">7</p>
@@ -185,13 +206,26 @@
                         <canvas id="dailyChart18"></canvas>
                     </div>
                 </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col relative"> <!-- Adicionado 'relative' aqui -->
+                    <div class="day-icon">SEG</div> <!-- Ícone do dia da semana -->
+                    <h3 class="text-xl font-bold mb-1">21 de Julho de 2025 (Segunda-feira)</h3>
+                    <!-- Novo KPI Box para o total diário -->
+                    <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
+                        <p class="text-2xl font-extrabold text-slate-900" id="totalDaily21">2</p>
+                        <p class="text-slate-600 font-medium text-sm">Ligações Ativas</p>
+                    </div>
+                    <div class="chart-container flex-grow">
+                        <canvas id="dailyChart21"></canvas>
+                    </div>
+                </div>
             </div>
         </section>
         
         <section id="trends" class="mb-12">
              <h2 class="text-2xl font-bold mb-2 text-center">Tendências e Evolução (Chamadas Ativas)</h2>
             <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
-                Visualização da evolução do volume e da qualidade das chamadas ativas ao longo dos quatro dias, revelando padrões e mudanças importantes no desempenho.
+                Visualização da evolução do volume e da qualidade das chamadas ativas ao longo dos cinco dias, revelando padrões e mudanças importantes no desempenho.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white rounded-lg shadow-md p-6">
@@ -304,15 +338,17 @@
             'dailyChart15': 23, // 12 Boas + 3 Médias + 8 Ruins
             'dailyChart16': 27, // 14 Boas + 5 Médias + 8 Ruins
             'dailyChart17': 17,  // 14 Boas + 2 Médias + 1 Ruim
-            'dailyChart18': 7   // 5 Boas + 1 Média + 1 Ruim
+            'dailyChart18': 7,   // 5 Boas + 1 Média + 1 Ruim
+            'dailyChart21': 2    // 2 Boas + 0 Médias + 0 Ruins
         };
 
         // Objeto para mapear datas aos totais ativos para o gráfico de tendência de qualidade
         const dailyTotalsByDate = {
-            '15/07': 23,
-            '16/07': 27,
-            '17/07': 17,
-            '18/07': 7
+            '15/07': {total: 23, day: 'Terça-feira', abbr: 'TER'},
+            '16/07': {total: 27, day: 'Quarta-feira', abbr: 'QUA'},
+            '17/07': {total: 17, day: 'Quinta-feira', abbr: 'QUI'},
+            '18/07': {total: 7, day: 'Sexta-feira', abbr: 'SEX'},
+            '21/07': {total: 2, day: 'Segunda-feira', abbr: 'SEG'}
         };
 
         // --- Definição dos dados dos gráficos ---
@@ -320,7 +356,7 @@
             labels: ['Boas', 'Médias', 'Ruins'],
             datasets: [{
                 label: 'Qualidade das Ligações',
-                data: [45, 11, 18], // Atualizado para incluir dia 18
+                data: [47, 11, 18], // Atualizado para incluir dia 21 (45+2=47)
                 backgroundColor: [
                     colorPalette.good,
                     colorPalette.medium,
@@ -366,11 +402,20 @@
             ]
         };
 
+        const dailyChartData21 = { // Novos dados para 21/07
+            labels: ['Boas', 'Médias', 'Ruins'],
+            datasets: [
+                { label: '🇧🇷 PTBR', data: [2, 0, 0], backgroundColor: langColors.ptbr },
+                { label: '🇨🇴 ESCO', data: [0, 0, 0], backgroundColor: langColors.esco },
+                { label: '🇲🇽 ESMX', data: [0, 0, 0], backgroundColor: langColors.esmx }
+            ]
+        };
+
         const totalCallsTrendData = {
-            labels: ['15/07', '16/07', '17/07', '18/07'], // Atualizado
+            labels: ['15/07', '16/07', '17/07', '18/07', '21/07'], // Atualizado
             datasets: [{
                 label: 'Total de Ligações por Dia',
-                data: [23, 27, 17, 7], // Atualizado
+                data: [23, 27, 17, 7, 2], // Atualizado
                 fill: true,
                 backgroundColor: 'rgba(74, 134, 217, 0.2)',
                 borderColor: 'rgba(74, 134, 217, 1)',
@@ -382,11 +427,11 @@
         };
 
         const qualityTrendData = {
-            labels: ['15/07', '16/07', '17/07', '18/07'].map(date => `${date}\n(${dailyTotalsByDate[date]})`), // Adiciona total de ligações
+            labels: ['15/07', '16/07', '17/07', '18/07', '21/07'].map(date => `${date}\n(${dailyTotalsByDate[date].total})`), // Adiciona total de ligações
             datasets: [
-                { label: 'Boas', data: [12, 14, 14, 5], backgroundColor: colorPalette.good }, // Atualizado
-                { label: 'Médias', data: [3, 5, 2, 1], backgroundColor: colorPalette.medium }, // Atualizado
-                { label: 'Ruins', data: [8, 8, 1, 1], backgroundColor: colorPalette.bad }, // Atualizado
+                { label: 'Boas', data: [12, 14, 14, 5, 2], backgroundColor: colorPalette.good }, // Atualizado
+                { label: 'Médias', data: [3, 5, 2, 1, 0], backgroundColor: colorPalette.medium }, // Atualizado
+                { label: 'Ruins', data: [8, 8, 1, 1, 0], backgroundColor: colorPalette.bad }, // Atualizado
             ]
         };
 
@@ -394,7 +439,7 @@
             labels: ['🇧🇷 PTBR', '🇨🇴 ESCO'],
             datasets: [{
                 label: 'Idioma',
-                data: [35, 10], // Atualizado: PTBR (30+5=35), ESCO (10+0=10)
+                data: [37, 10], // Atualizado: PTBR (35+2=37), ESCO (10+0=10)
                 backgroundColor: [langColors.ptbr, langColors.esco],
                 borderColor: '#ffffff',
                 borderWidth: 2,
@@ -468,7 +513,7 @@
                                     // Need to get the total for that specific day from dailyTotalsByDate
                                     const dateLabel = tooltipItem.chart.data.labels[dataIndex];
                                     const dateOnly = Array.isArray(dateLabel) ? dateLabel[0] : dateLabel;
-                                    totalForPercentage = dailyTotalsByDate[dateOnly] || 0;
+                                    totalForPercentage = dailyTotalsByDate[dateOnly].total || 0;
 
                                     labelText = dataset.label; // Quality type label (e.g., 'Boas')
                                 }
@@ -516,7 +561,7 @@
                                 // Here, dataIndex is the index of the day (0, 1, 2)
                                 const dateLabel = chart.data.labels[dataIndex];
                                 const dateOnly = Array.isArray(dateLabel) ? dateLabel[0] : dateLabel;
-                                totalForPercentage = dailyTotalsByDate[dateOnly] || 0;
+                                totalForPercentage = dailyTotalsByDate[dateOnly].total || 0;
                             }
                         } else if (chart.config.type === 'line') {
                             // For line charts, datalabels usually show just the value or total, not percentage of a segment.
@@ -567,6 +612,13 @@
         new Chart(document.getElementById('dailyChart18'), {
             type: 'bar',
             data: dailyChartData18,
+            options: { ...commonChartOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
+        });
+
+        // Novo gráfico para o dia 21
+        new Chart(document.getElementById('dailyChart21'), {
+            type: 'bar',
+            data: dailyChartData21,
             options: { ...commonChartOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
         });
 
@@ -631,6 +683,28 @@
             type: 'pie',
             data: goodCallsLangData,
             options: { ...commonChartOptions }
+        });
+
+        // Função para obter a abreviação do dia da semana
+        function getDayAbbreviation(dateString) {
+            const date = new Date(`2025-${dateString.substring(3,5)}-${dateString.substring(0,2)}T12:00:00`); // Ano fixo para 2025
+            const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
+            return days[date.getDay()];
+        }
+
+        // Adicionar os ícones dos dias da semana dinamicamente
+        document.addEventListener('DOMContentLoaded', () => {
+            const dailyAnalysisBoxes = document.querySelectorAll('#daily-analysis .bg-white.rounded-lg.shadow-md.p-6');
+            const dates = ['15/07', '16/07', '17/07', '18/07', '21/07']; // Ordem dos dias
+
+            dailyAnalysisBoxes.forEach((box, index) => {
+                const date = dates[index];
+                const dayAbbr = getDayAbbreviation(date);
+                const dayIconDiv = document.createElement('div');
+                dayIconDiv.classList.add('day-icon');
+                dayIconDiv.textContent = dayAbbr;
+                box.appendChild(dayIconDiv);
+            });
         });
     </script>
 </body>
