@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Desempenho de Chamadas (Sem Neutras)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin para exibir rótulos de dados diretamente nos gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        /* Nova classe para o gráfico de Comparativo de Qualidade por Dia */
+        .quality-trend-chart-container {
+            height: 400px; /* Aumenta a altura para dar mais espaço aos rótulos acima das barras */
+            max-height: 500px;
+        }
+
+        .kpi-box {
+            background-color: #f8fafc;
+            border-left: 5px solid;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .kpi-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .flag-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+    </style>
+    
+    
+    
+    
+    
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">Análise de Desempenho de Chamadas</h1>
+            <p class="text-slate-600 mt-1">Período de Análise: 15/07/2025 a 18/07/2025 (Excluindo Neutras)</p>
+            <div class="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-4">
+                <span class="text-slate-700 text-sm md:text-base">POC para:</span>
+                <img src="https://placehold.co/80x30/8a05be/ffffff?text=Nubank" onerror="this.onerror=null;this.src='https://placehold.co/80x30/cccccc/000000?text=Nubank';" alt="Logo Nubank" class="h-8 rounded-md">
+                <span class="text-slate-700 text-sm md:text-base">Realizado por:</span>
+                <img src="https://placehold.co/80x30/000000/ffffff?text=Mutant" onerror="this.onerror=null;this.src='https://placehold.co/80x30/cccccc/000000?text=Mutant';" alt="Logo Mutant" class="h-8 rounded-md">
+                <img src="https://placehold.co/80x30/000000/ffffff?text=Intervalor" onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=IV';" alt="Logo Intervalor" class="h-8 rounded-md">
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        
+        <section id="overview" class="mb-12">
+            <h2 class="text-2xl font-bold mb-2 text-center">Visão Geral do Período</h2>
+            <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
+                Uma visão consolidada do desempenho das 74 chamadas ativas (não neutras) recebidas nos quatro dias. Os dados mostram a distribuição geral da qualidade e destacam as principais métricas do período.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center mb-10">
+                <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #4A86D9;">
+                    <p class="text-4xl font-extrabold text-slate-900">74</p>
+                    <p class="text-slate-600 font-medium">Total de Ligações Ativas</p>
+                </div>
+                <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #6ED3B3;">
+                    <p class="text-4xl font-extrabold text-slate-900">45 <span class="text-xl font-semibold text-slate-700">(60.8%)</span></p>
+                    <p class="text-slate-600 font-medium">Boas</p>
+                </div>
+                <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #F9A646;">
+                    <p class="text-4xl font-extrabold text-slate-900">11 <span class="text-xl font-semibold text-slate-700">(14.9%)</span></p>
+                    <p class="text-slate-600 font-medium">Médias</p>
+                </div>
+                <div class="kpi-box p-6 rounded-lg shadow-sm" style="border-color: #F46E6E;">
+                    <p class="text-4xl font-extrabold text-slate-900">18 <span class="text-xl font-semibold text-slate-700">(24.3%)</span></p>
+                    <p class="text-slate-600 font-medium">Ruins</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                 <h3 class="text-xl font-bold mb-4 text-center">Distribuição Geral da Qualidade (Ativas)</h3>
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="overallQualityChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="call-classifications" class="mb-12">
+            <h2 class="text-2xl font-bold mb-2 text-center">Classificação das Chamadas</h2>
+            <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
+                Entenda os critérios utilizados para classificar a qualidade das chamadas, desde as interações mais fluidas até aquelas com desafios técnicos ou de comunicação.
+            </p>
+            <div class="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+                <ul class="space-y-4">
+                    <li>
+                        <h4 class="font-bold text-slate-900 text-lg">Boas</h4>
+                        <p class="text-slate-600">Chamadas que seguiram jornadas com fluidez nos diversos caminhos do Bot, incluindo fechamento de acordo, apresentação de hierarquias de propostas, alegações de pagamento, tentativas de manipulações, etc.</p>
+                    </li>
+                    <li>
+                        <h4 class="font-bold text-slate-900 text-lg">Médias</h4>
+                        <p class="text-slate-600">Chamadas que seguiram os fluxos consistentes, porém com pontos de melhorias (situações não previstas, falhas de captura de STT que não prejudicaram as conversações, etc.).</p>
+                    </li>
+                    <li>
+                        <h4 class="font-bold text-slate-900 text-lg">Ruins</h4>
+                        <p class="text-slate-600">Chamadas com falhas na identificação, alucinações, problemas no framework, etc.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="daily-analysis" class="mb-12">
+            <h2 class="text-2xl font-bold mb-2 text-center">Análise Diária Detalhada (Chamadas Ativas)</h2>
+            <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
+                Análise aprofundada do desempenho de cada dia, detalhando a qualidade das chamadas e a distribuição por idioma, excluindo as ligações neutras.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                    <h3 class="text-xl font-bold mb-1">15 de Julho de 2025</h3>
+                    <!-- Novo KPI Box para o total diário -->
+                    <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
+                        <p class="text-2xl font-extrabold text-slate-900" id="totalDaily15">23</p>
+                        <p class="text-slate-600 font-medium text-sm">Ligações Ativas</p>
+                    </div>
+                    <div class="chart-container flex-grow">
+                        <canvas id="dailyChart15"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                    <h3 class="text-xl font-bold mb-1">16 de Julho de 2025</h3>
+                    <!-- Novo KPI Box para o total diário -->
+                    <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
+                        <p class="text-2xl font-extrabold text-slate-900" id="totalDaily16">27</p>
+                        <p class="text-slate-600 font-medium text-sm">Ligações Ativas</p>
+                    </div>
+                    <div class="chart-container flex-grow">
+                        <canvas id="dailyChart16"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                    <h3 class="text-xl font-bold mb-1">17 de Julho de 2025</h3>
+                    <!-- Novo KPI Box para o total diário -->
+                    <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
+                        <p class="text-2xl font-extrabold text-slate-900" id="totalDaily17">17</p>
+                        <p class="text-slate-600 font-medium text-sm">Ligações Ativas</p>
+                    </div>
+                     <div class="chart-container flex-grow">
+                        <canvas id="dailyChart17"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                    <h3 class="text-xl font-bold mb-1">18 de Julho de 2025</h3>
+                    <!-- Novo KPI Box para o total diário -->
+                    <div class="kpi-box p-3 rounded-lg shadow-sm mb-4 text-center" style="border-color: #4A86D9;">
+                        <p class="text-2xl font-extrabold text-slate-900" id="totalDaily18">7</p>
+                        <p class="text-slate-600 font-medium text-sm">Ligações Ativas</p>
+                    </div>
+                    <div class="chart-container flex-grow">
+                        <canvas id="dailyChart18"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="trends" class="mb-12">
+             <h2 class="text-2xl font-bold mb-2 text-center">Tendências e Evolução (Chamadas Ativas)</h2>
+            <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
+                Visualização da evolução do volume e da qualidade das chamadas ativas ao longo dos quatro dias, revelando padrões e mudanças importantes no desempenho.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 text-center">Evolução do Volume Total de Ligações Ativas</h3>
+                    <div class="chart-container">
+                        <canvas id="totalCallsTrendChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold mb-4 text-center">Comparativo de Qualidade por Dia (Ativas)</h3>
+                    <div class="chart-container quality-trend-chart-container"> <!-- Adicionada classe específica -->
+                        <canvas id="qualityTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="language-analysis" class="mb-12">
+            <h2 class="text-2xl font-bold mb-2 text-center">Análise de Idiomas nas Chamadas "Boas"</h2>
+            <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
+                Foco nas chamadas de alta qualidade para entender a contribuição de cada idioma. Notamos um crescimento significativo na participação do ESCO no último dia.
+            </p>
+            <div class="bg-white rounded-lg shadow-md p-6 md:w-2/3 lg:w-1/2 mx-auto">
+                <h3 class="text-xl font-bold mb-4 text-center">Distribuição de Idiomas (Chamadas Boas)</h3>
+                <div class="chart-container">
+                    <canvas id="goodCallsLangChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="flag-legend" class="mb-12">
+            <h2 class="text-2xl font-bold mb-2 text-center">Legenda de Idiomas</h2>
+            <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
+                Identificação visual dos idiomas presentes nas chamadas.
+            </p>
+            <div class="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
+                <ul class="space-y-3">
+                    <li class="flex items-center text-slate-700">
+                        <img src="https://flagsapi.com/BR/flat/20.png" onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=BR';" alt="Bandeira do Brasil" class="flag-icon">
+                        <span class="font-medium">PTBR: Português (Brasil)</span>
+                    </li>
+                    <li class="flex items-center text-slate-700">
+                        <img src="https://flagsapi.com/CO/flat/20.png" onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=CO';" alt="Bandeira da Colômbia" class="flag-icon">
+                        <span class="font-medium">ESCO: Espanhol (Colômbia)</span>
+                    </li>
+                    <li class="flex items-center text-slate-700">
+                        <img src="https://flagsapi.com/MX/flat/20.png" onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=MX';" alt="Bandeira do México" class="flag-icon">
+                        <span class="font-medium">ESMX: Espanhol (México)</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="recommendations" class="mb-12">
+            <h2 class="text-2xl font-bold mb-2 text-center">Recomendações e Próximos Passos</h2>
+            <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8">
+                Com base na análise dos dados, as seguintes ações foram tomadas ou estão em andamento para otimizar o desempenho futuro da equipe.
+            </p>
+            <div class="max-w-4xl mx-auto">
+                <ul class="space-y-4">
+                    <li class="bg-white p-5 rounded-lg shadow-sm flex items-start space-x-4">
+                        <span class="text-2xl text-sky-500">✅</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Queda de Volume e Chamadas Neutras</h4>
+                            <p class="text-slate-600">A causa da queda de volume foi identificada: as chamadas em caixa postal foram removidas do discador, o que impactou diretamente o total de ligações neutras.</p>
+                        </div>
+                    </li>
+                    <li class="bg-white p-5 rounded-lg shadow-sm flex items-start space-x-4">
+                        <span class="text-2xl text-emerald-500">💡</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Replicar as Melhores Práticas</h4>
+                            <p class="text-slate-600">Estudar as chamadas "Boas" do dia 17, especialmente as de ESCO, para identificar e disseminar as práticas que levaram ao sucesso.</p>
+                        </div>
+                    </li>
+                    <li class="bg-white p-5 rounded-lg shadow-sm flex items-start space-x-4">
+                         <span class="text-2xl text-amber-500">📈</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Foco em Chamadas Médias e Ruins</h4>
+                            <p class="text-slate-600">Os principais pontos negativos já foram identificados e tratativas foram adicionadas, resultando em uma melhora percebida no dia 17, mesmo com um volume de chamadas mais baixo.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-6 mt-12 bg-slate-100">
+        <p class="text-slate-500">Infográfico gerado em 18 de Julho de 2025.</p>
+    </footer>
+
+    <script>
+        // Registrar o plugin datalabels globalmente
+        Chart.register(ChartDataLabels);
+
+        const colorPalette = {
+            good: '#6ED3B3',
+            medium: '#F9A646',
+            bad: '#F46E6E',
+        };
+
+        const langColors = {
+            ptbr: '#003f5c',
+            esco: '#7a5195',
+            esmx: '#ef5675',
+        };
+
+        // Totais de chamadas ativas por dia, para cálculo de percentual em gráficos diários
+        const dailyActiveTotals = {
+            'dailyChart15': 23, // 12 Boas + 3 Médias + 8 Ruins
+            'dailyChart16': 27, // 14 Boas + 5 Médias + 8 Ruins
+            'dailyChart17': 17,  // 14 Boas + 2 Médias + 1 Ruim
+            'dailyChart18': 7   // 5 Boas + 1 Média + 1 Ruim
+        };
+
+        // Objeto para mapear datas aos totais ativos para o gráfico de tendência de qualidade
+        const dailyTotalsByDate = {
+            '15/07': 23,
+            '16/07': 27,
+            '17/07': 17,
+            '18/07': 7
+        };
+
+        // --- Definição dos dados dos gráficos ---
+        const overallQualityData = {
+            labels: ['Boas', 'Médias', 'Ruins'],
+            datasets: [{
+                label: 'Qualidade das Ligações',
+                data: [45, 11, 18], // Atualizado para incluir dia 18
+                backgroundColor: [
+                    colorPalette.good,
+                    colorPalette.medium,
+                    colorPalette.bad,
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 4
+            }]
+        };
+
+        const dailyChartData15 = {
+            labels: ['Boas', 'Médias', 'Ruins'],
+            datasets: [
+                { label: '🇧🇷 PTBR', data: [11, 2, 6], backgroundColor: langColors.ptbr },
+                { label: '🇨🇴 ESCO', data: [1, 1, 2], backgroundColor: langColors.esco },
+                { label: '🇲🇽 ESMX', data: [0, 0, 0], backgroundColor: langColors.esmx }
+            ]
+        };
+
+        const dailyChartData16 = {
+            labels: ['Boas', 'Médias', 'Ruins'],
+            datasets: [
+                { label: '🇧🇷 PTBR', data: [11, 4, 7], backgroundColor: langColors.ptbr },
+                { label: '🇨🇴 ESCO', data: [3, 1, 1], backgroundColor: langColors.esco }
+            ]
+        };
+
+        const dailyChartData17 = {
+            labels: ['Boas', 'Médias', 'Ruins'],
+            datasets: [
+                { label: '🇧🇷 PTBR', data: [8, 2, 1], backgroundColor: langColors.ptbr },
+                { label: '🇨🇴 ESCO', data: [6, 0, 0], backgroundColor: langColors.esco }
+            ]
+        };
+
+        const dailyChartData18 = { // Novos dados para 18/07
+            labels: ['Boas', 'Médias', 'Ruins'],
+            datasets: [
+                { label: '🇧🇷 PTBR', data: [5, 1, 0], backgroundColor: langColors.ptbr },
+                { label: '🇨🇴 ESCO', data: [0, 0, 0], backgroundColor: langColors.esco },
+                { label: '🇲🇽 ESMX', data: [0, 0, 1], backgroundColor: langColors.esmx }
+            ]
+        };
+
+        const totalCallsTrendData = {
+            labels: ['15/07', '16/07', '17/07', '18/07'], // Atualizado
+            datasets: [{
+                label: 'Total de Ligações por Dia',
+                data: [23, 27, 17, 7], // Atualizado
+                fill: true,
+                backgroundColor: 'rgba(74, 134, 217, 0.2)',
+                borderColor: 'rgba(74, 134, 217, 1)',
+                tension: 0.1,
+                pointBackgroundColor: 'rgba(74, 134, 217, 1)',
+                pointBorderColor: '#fff',
+                pointHoverRadius: 7,
+            }]
+        };
+
+        const qualityTrendData = {
+            labels: ['15/07', '16/07', '17/07', '18/07'].map(date => `${date}\n(${dailyTotalsByDate[date]})`), // Adiciona total de ligações
+            datasets: [
+                { label: 'Boas', data: [12, 14, 14, 5], backgroundColor: colorPalette.good }, // Atualizado
+                { label: 'Médias', data: [3, 5, 2, 1], backgroundColor: colorPalette.medium }, // Atualizado
+                { label: 'Ruins', data: [8, 8, 1, 1], backgroundColor: colorPalette.bad }, // Atualizado
+            ]
+        };
+
+        const goodCallsLangData = {
+            labels: ['🇧🇷 PTBR', '🇨🇴 ESCO'],
+            datasets: [{
+                label: 'Idioma',
+                data: [35, 10], // Atualizado: PTBR (30+5=35), ESCO (10+0=10)
+                backgroundColor: [langColors.ptbr, langColors.esco],
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 4
+            }]
+        };
+        // --- Fim da definição dos dados dos gráficos ---
+
+
+        function wrapLabels(label) {
+            const maxLen = 16;
+            if (typeof label !== 'string' || label.length <= maxLen) {
+                return label;
+            }
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).length > maxLen && currentLine.length > 0) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine += (currentLine.length === 0 ? '' : ' ') + word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                // Para tooltips, queremos a data sem o total de ligações
+                return label[0]; 
+            }
+            return label;
+        };
+        
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback,
+                        label: function(tooltipItem) {
+                            const dataset = tooltipItem.dataset;
+                            const currentValue = tooltipItem.raw;
+                            let totalForPercentage = 0;
+                            let labelText = '';
+
+                            if (tooltipItem.chart.config.type === 'doughnut' || tooltipItem.chart.config.type === 'pie') {
+                                totalForPercentage = dataset.data.reduce((sum, val) => sum + val, 0);
+                                labelText = tooltipItem.label; // Category name for pie/doughnut
+                            } else if (tooltipItem.chart.config.type === 'bar') {
+                                const dataIndex = tooltipItem.dataIndex; // Index of the quality category (Boas, Médias, Ruins)
+                                const scalesOptions = tooltipItem.chart.options.scales;
+                                const xAxisOptions = scalesOptions && scalesOptions.x ? scalesOptions.x : undefined; // Acessa x de forma segura
+                                const isStacked = xAxisOptions ? xAxisOptions.stacked : false; // Acessa stacked de forma segura
+
+                                if (isStacked) {
+                                    // For stacked bar charts (daily charts), percentage of a language segment (e.g., PTBR Médias)
+                                    // is relative to the TOTAL ACTIVE CALLS FOR THAT DAY.
+                                    const chartId = tooltipItem.chart.canvas.id;
+                                    totalForPercentage = dailyActiveTotals[chartId] || 0; // Use predefined total for the day
+                                    labelText = dataset.label; // Language label (e.g., 🇧🇷 PTBR)
+                                } else {
+                                    // For non-stacked bar charts (qualityTrendChart), percentage is relative to the total active calls for that specific day.
+                                    // Here, dataIndex is the index of the day (0, 1, 2)
+                                    // Need to get the total for that specific day from dailyTotalsByDate
+                                    const dateLabel = tooltipItem.chart.data.labels[dataIndex];
+                                    const dateOnly = Array.isArray(dateLabel) ? dateLabel[0] : dateLabel;
+                                    totalForPercentage = dailyTotalsByDate[dateOnly] || 0;
+
+                                    labelText = dataset.label; // Quality type label (e.g., 'Boas')
+                                }
+                            } else if (tooltipItem.chart.config.type === 'line') {
+                                // For line charts, percentage is usually not applicable in the same way,
+                                // but if needed, it would be relative to the dataset's total.
+                                totalForPercentage = dataset.data.reduce((sum, val) => sum + val, 0);
+                                labelText = dataset.label;
+                            }
+
+                            const percentage = totalForPercentage > 0 ? ((currentValue / totalForPercentage) * 100).toFixed(1) : 0;
+                            return `${labelText}: ${currentValue} (${percentage}%)`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                },
+                datalabels: {
+                    color: '#fff', // Cor padrão dos rótulos
+                    font: {
+                        weight: 'bold',
+                        size: 10
+                    },
+                    formatter: (value, context) => {
+                        let totalForPercentage = 0;
+                        const chart = context.chart;
+                        const dataset = context.dataset;
+                        const dataIndex = context.dataIndex;
+
+                        if (chart.config.type === 'doughnut' || chart.config.type === 'pie') {
+                            totalForPercentage = dataset.data.reduce((sum, val) => sum + val, 0);
+                        } else if (chart.config.type === 'bar') {
+                            const scalesOptions = chart.options.scales;
+                            const xAxisOptions = scalesOptions && scalesOptions.x ? scalesOptions.x : undefined; // Acessa x de forma segura
+                            const isStacked = xAxisOptions ? xAxisOptions.stacked : false; // Acessa stacked de forma segura
+
+                            if (isStacked) {
+                                // For stacked bar charts (daily charts), percentage of a language segment
+                                // is relative to the TOTAL ACTIVE CALLS FOR THAT DAY.
+                                const chartId = chart.canvas.id;
+                                totalForPercentage = dailyActiveTotals[chartId] || 0;
+                            } else {
+                                // For non-stacked bar charts (qualityTrendChart), percentage is relative to the total of all quality types for that specific day.
+                                // Here, dataIndex is the index of the day (0, 1, 2)
+                                const dateLabel = chart.data.labels[dataIndex];
+                                const dateOnly = Array.isArray(dateLabel) ? dateLabel[0] : dateLabel;
+                                totalForPercentage = dailyTotalsByDate[dateOnly] || 0;
+                            }
+                        } else if (chart.config.type === 'line') {
+                            // For line charts, datalabels usually show just the value or total, not percentage of a segment.
+                            return value;
+                        }
+
+                        const percentage = totalForPercentage > 0 ? ((value / totalForPercentage) * 100).toFixed(1) : 0;
+                        return `${value} (${percentage}%)`;
+                    },
+                    display: function(context) {
+                        // Esconde rótulos para valores zero ou para gráficos de linha onde não faz sentido
+                        return context.dataset.data[context.dataIndex] !== 0 && context.chart.config.type !== 'line';
+                    },
+                    // Ajuste de posição para gráficos de barra
+                    anchor: 'center',
+                    align: 'center',
+                }
+            },
+        };
+
+        // Gráficos
+        new Chart(document.getElementById('overallQualityChart'), {
+            type: 'doughnut',
+            data: overallQualityData,
+            options: { ...commonChartOptions }
+        });
+
+        // Gráficos Diários
+        new Chart(document.getElementById('dailyChart15'), {
+            type: 'bar',
+            data: dailyChartData15,
+            options: { ...commonChartOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
+        });
+
+        new Chart(document.getElementById('dailyChart16'), {
+            type: 'bar',
+            data: dailyChartData16,
+            options: { ...commonChartOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
+        });
+
+        new Chart(document.getElementById('dailyChart17'), {
+            type: 'bar',
+            data: dailyChartData17,
+            options: { ...commonChartOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
+        });
+
+        // Novo gráfico para o dia 18
+        new Chart(document.getElementById('dailyChart18'), {
+            type: 'bar',
+            data: dailyChartData18,
+            options: { ...commonChartOptions, scales: { x: { stacked: true }, y: { stacked: true } } }
+        });
+
+        // Gráfico de Tendência de Volume (datalabels desativados para linha)
+        new Chart(document.getElementById('totalCallsTrendChart'), {
+            type: 'line',
+            data: totalCallsTrendData,
+            options: { 
+                ...commonChartOptions, 
+                plugins: { 
+                    ...commonChartOptions.plugins, 
+                    legend: { display: false },
+                    datalabels: { display: false } // Desativa datalabels para este gráfico
+                } 
+            }
+        });
+
+        // Comparativo de Qualidade por Dia (Ativas)
+        new Chart(document.getElementById('qualityTrendChart'), {
+            type: 'bar',
+            data: qualityTrendData,
+            options: {
+                ...commonChartOptions,
+                scales: { x: {}, y: {} },
+                plugins: {
+                    ...commonChartOptions.plugins, // Mantém outras configurações de plugins comuns
+                    datalabels: {
+                        color: '#333', // Cor dos rótulos para contraste fora da barra
+                        font: {
+                            weight: 'bold',
+                            size: 9 // Reduzir um pouco mais a fonte para melhor encaixe
+                        },
+                        padding: 0,
+                        formatter: (value, context) => {
+                            let totalForPercentage = 0;
+                            const chart = context.chart;
+                            const dataIndex = context.dataIndex; // Este é o índice do dia
+
+                            // Soma todos os tipos de qualidade para o dia atual (dataIndex)
+                            chart.data.datasets.forEach(ds => {
+                                if (ds.data && ds.data[dataIndex] !== undefined) {
+                                    totalForPercentage += ds.data[dataIndex];
+                                }
+                            });
+
+                            const percentage = totalForPercentage > 0 ? ((value / totalForPercentage) * 100).toFixed(1) : 0;
+                            return `${value}\n(${percentage}%)`; // Formato com quebra de linha
+                        },
+                        display: function(context) {
+                            return context.dataset.data[context.dataIndex] !== 0; // Exibe apenas para valores não-zero
+                        },
+                        anchor: 'end', // Posiciona o rótulo no final (topo) da barra
+                        align: 'center', // Alinha o rótulo ao centro horizontalmente
+                        offset: 4, // Adiciona um pequeno offset para fora da barra
+                    }
+                }
+            }
+        });
+
+        // Distribuição de Idiomas (Chamadas Boas)
+        new Chart(document.getElementById('goodCallsLangChart'), {
+            type: 'pie',
+            data: goodCallsLangData,
+            options: { ...commonChartOptions }
+        });
+    </script>
+</body>
+</html>
